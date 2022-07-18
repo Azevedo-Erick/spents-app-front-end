@@ -19,11 +19,11 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
         .transactions;
   }
 
+  bool showingAll = true;
   @override
   Widget build(BuildContext context) {
     TransactionOverviewController controller =
         Provider.of<TransactionOverviewController>(context);
-    bool showingAll = true;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Meus Gastos'),
@@ -72,6 +72,7 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         child: Column(children: [
           Expanded(
+            flex: 1,
             child: Column(children: [
               controller.categories.isNotEmpty
                   ? Expanded(
@@ -90,9 +91,9 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
                                 controller.filterTransactionsByCategory(
                                     controller.categories[index]);
                                 setState(() {
-                                  showingAll = false;
+                                  showingAll = !showingAll;
+                                  print(showingAll);
                                 });
-                                ;
                               }),
                               child: CategoryWidget(
                                   name: controller.categories[index].name));
@@ -108,10 +109,10 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
                   height: MediaQuery.of(context).size.height * 0.8,
                   width: MediaQuery.of(context).size.height * 0.7,
                   decoration: BoxDecoration(
-                    color: Colors.grey[400],
                     borderRadius: BorderRadius.all(Radius.circular(5)),
                   ),
                   child: ListView.separated(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 50),
                     itemBuilder: (context, index) => TransactionWidget(
                       transaction: showingAll
                           ? controller.transactions[index]

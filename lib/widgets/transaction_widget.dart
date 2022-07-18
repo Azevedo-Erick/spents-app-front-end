@@ -24,79 +24,71 @@ class _TransactionWidgetState extends State<TransactionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9.0, vertical: 18.0),
-      decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.grey,
-            width: 1.0,
-          ),
-          borderRadius: BorderRadius.circular(5.0),
-          color: Colors.white),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return ListTile(
+        tileColor: Colors.indigo,
+        textColor: Colors.white,
+        iconColor: Colors.white,
+        shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+                bottomRight: Radius.circular(10),
+                bottomLeft: Radius.circular(10))),
+        title: Text(
+          widget.transaction.title,
+          style: GoogleFonts.roboto(),
+        ),
+        subtitle: Text(
+          widget.transaction.category.name,
+          style: GoogleFonts.comfortaa(),
+        ),
+        trailing: SizedBox(
+          width: 140,
+          child: AnimatedCrossFade(
+            duration: const Duration(milliseconds: 500),
+            crossFadeState: _showingPrice
+                ? CrossFadeState.showFirst
+                : CrossFadeState.showSecond,
+            firstChild: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(
-                  widget.transaction.title,
-                  style: GoogleFonts.roboto(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Text(
-                  widget.transaction.category.name,
-                  style: GoogleFonts.comfortaa(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ]),
-          SizedBox(
-            width: 120,
-            child: AnimatedCrossFade(
-              duration: const Duration(milliseconds: 500),
-              crossFadeState: _showingPrice
-                  ? CrossFadeState.showFirst
-                  : CrossFadeState.showSecond,
-              firstChild: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: _togglePrice,
+                TextButton(
+                  onPressed: _togglePrice,
+                  child: Container(
+                    padding: EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 1.0,
+                      ),
+                    ),
                     child: Text(
                       overflow: TextOverflow.ellipsis,
-                      'R\$ ${widget.transaction.value.toString()}',
+                      'R\$ ${widget.transaction.value.toStringAsFixed(2)}',
                       style: GoogleFonts.robotoMono(
-                          fontSize: 20,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: widget.transaction.type == Type.INCOME
                               ? Colors.green
                               : Colors.red),
                     ),
-                  )
-                ],
-              ),
-              secondChild: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                      onPressed: _togglePrice,
-                      child: Icon(Icons.cancel_rounded)),
-                  TextButton(
-                      onPressed: () => {}, child: Icon(Icons.search_rounded)),
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
-          )
-        ],
-      ),
-    );
+            secondChild: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                TextButton(
+                    onPressed: _togglePrice, child: Icon(Icons.cancel_rounded)),
+                TextButton(
+                    onPressed: () => {}, child: Icon(Icons.search_rounded)),
+              ],
+            ),
+          ),
+        ));
   }
 }
