@@ -3,6 +3,7 @@ import 'package:spents_app/models/type_enum.dart';
 
 class Transaction {
   String id;
+  String title;
   double value;
   String description;
   Type? type;
@@ -10,6 +11,7 @@ class Transaction {
 
   Transaction({
     required this.id,
+    required this.title,
     required this.value,
     required this.description,
     required this.type,
@@ -19,6 +21,7 @@ class Transaction {
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
       id: json['id'],
+      title: json['title'],
       value: double.parse(json['value'].toString()),
       description: json['description'],
       type: Type.getType(json['type']),
@@ -29,6 +32,7 @@ class Transaction {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'title': title,
       'value': value,
       'description': description,
       'type': type.toString(),

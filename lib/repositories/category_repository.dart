@@ -1,30 +1,26 @@
-import 'dart:collection';
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
 
 import '../models/category_model.dart';
 import 'package:http/http.dart' as http;
 
-class CategoryRepository extends ChangeNotifier {
-  List<Category> _categories = [];
-  void getAllCategories() async {
-    _categories.clear();
+class CategoryRepository {
+  Future<List<Category>> getAllCategories() async {
+    List<Category> categories = [];
     http.Response response =
         await http.get(Uri.parse('http://localhost:3000/category'));
     var results = jsonDecode(response.body);
     if (results != null) {
       for (int i = 0; i < results.length; i++) {
-        _categories.add(Category.fromJson(results[i]));
+        categories.add(Category.fromJson(results[i]));
       }
     }
-    notifyListeners();
+    return categories;
   }
 
-  void createCategory(Category category) async {
+  Future<void> createCategory(String body) async {
     http.Response response = await http.post(
       Uri.parse('http://localhost:3000/category'),
-      body: jsonEncode(category.toJson()),
+      body: body,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -33,9 +29,6 @@ class CategoryRepository extends ChangeNotifier {
       getAllCategories();
     }
   }
-
-  UnmodifiableListView<Category> get categories =>
-      UnmodifiableListView(_categories);
 
   // Future<Category> getCategoryById(int id) => categoryDao.getCategoryById(id);
   // Future<void> insertCategory(Category category) =>

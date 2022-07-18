@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:spents_app/screens/index_page.dart';
+import 'package:spents_app/screens/transactions_overview.dart';
 
 import '../screens/login_page.dart';
-import '../screens/new_spent_page.dart';
+import '../screens/new_data.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -10,9 +10,9 @@ class RouteGenerator {
 
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => const IndexPage());
-      case '/new-spent':
-        return MaterialPageRoute(builder: (_) => const NewSpentPage());
+        return MaterialPageRoute(builder: (_) => const TransactionsOverview());
+      case '/new-data':
+        return MaterialPageRoute(builder: (_) => const NewData());
       case '/login':
         return MaterialPageRoute(builder: (_) => const LoginPage());
     }

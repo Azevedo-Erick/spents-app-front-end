@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:spents_app/repositories/category_repository.dart';
-import 'package:spents_app/repositories/transaction_repository.dart';
-
+import 'package:spents_app/controllers/new_data_controller.dart';
+import 'package:spents_app/controllers/transactions_overview_controller.dart';
 import 'routes/route_generator.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider<CategoryRepository>(
-          create: (_) => CategoryRepository(),
+        ChangeNotifierProvider<NewDataController>(
+          create: (_) => NewDataController(),
         ),
-        ChangeNotifierProvider<TransactionRepository>(
-          create: (_) => TransactionRepository(),
+        ChangeNotifierProvider<TransactionOverviewController>(
+          create: (_) => TransactionOverviewController(),
         ),
       ],
       child: MyApp(),

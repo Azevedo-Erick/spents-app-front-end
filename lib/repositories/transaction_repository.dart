@@ -9,35 +9,33 @@ import '../models/transaction_model.dart';
 class TransactionRepository extends ChangeNotifier {
   TransactionRepository();
 
-  List<Transaction> _transactions = [];
+  //List<Transaction> _transactions = [];
 
-  UnmodifiableListView<Transaction> get transactions =>
-      UnmodifiableListView(_transactions);
+  //UnmodifiableListView<Transaction> get transactions =>
+  //  UnmodifiableListView(_transactions);
 
-  void getAllTransactions() async {
-    _transactions.clear();
+  Future<List<Transaction>> getAllTransactions() async {
+    List<Transaction> transactions = [];
     http.Response response =
         await http.get(Uri.parse('http://localhost:3000/transaction'));
     var results = jsonDecode(response.body);
     if (results != null) {
       for (int i = 0; i < results.length; i++) {
-        _transactions.add(Transaction.fromJson(results[i]));
+        transactions.add(Transaction.fromJson(results[i]));
       }
-      print(_transactions);
     }
-    notifyListeners();
+    return transactions;
   }
 
   //Create transaction
-  Future<void> createTransaction(Transaction transaction) async {
+  Future<void> createTransaction(String body) async {
     http.Response response = await http.post(
       Uri.parse('http://localhost:3000/transaction'),
-      body: jsonEncode(transaction.toJson()),
+      body: body,
       headers: {
         'Content-Type': 'application/json',
       },
     );
-    print(response.body);
     if (response.statusCode == 201) {
       getAllTransactions();
     }

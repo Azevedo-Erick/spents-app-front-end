@@ -1,41 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-import 'package:spents_app/models/category_model.dart';
-import 'package:spents_app/repositories/category_repository.dart';
-import 'package:spents_app/repositories/transaction_repository.dart';
-
+import '../controllers/transactions_overview_controller.dart';
 import '../widgets/category_widget.dart';
 import '../widgets/transaction_widget.dart';
 
-class IndexPage extends StatefulWidget {
-  const IndexPage({Key? key}) : super(key: key);
+class TransactionsOverview extends StatefulWidget {
+  const TransactionsOverview({Key? key}) : super(key: key);
 
   @override
-  State<IndexPage> createState() => _IndexPageState();
+  State<TransactionsOverview> createState() => _TransactionsOverviewState();
 }
 
-class _IndexPageState extends State<IndexPage> {
+class _TransactionsOverviewState extends State<TransactionsOverview> {
   @override
   void initState() {
     super.initState();
-    Provider.of<CategoryRepository>(context, listen: false).getAllCategories();
-    Provider.of<TransactionRepository>(context, listen: false)
-        .getAllTransactions();
+    Provider.of<TransactionOverviewController>(context, listen: false)
+        .transactions;
   }
 
   @override
   Widget build(BuildContext context) {
-    CategoryRepository repo = Provider.of<CategoryRepository>(context);
-    TransactionRepository transactionRepo =
-        Provider.of<TransactionRepository>(context);
+    TransactionOverviewController controller =
+        Provider.of<TransactionOverviewController>(context);
+    bool showingAll = true;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Meus Gastos'),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () => Navigator.pushNamed(context, '/new-spent'),
+            onPressed: () => Navigator.pushNamed(context, '/new-data'),
           ),
         ],
       ),
@@ -78,7 +73,7 @@ class _IndexPageState extends State<IndexPage> {
         child: Column(children: [
           Expanded(
             child: Column(children: [
-              repo.categories.isNotEmpty
+              controller.categories.isNotEmpty
                   ? Expanded(
                       flex: 1,
                       child: ListView.separated(
@@ -90,38 +85,47 @@ class _IndexPageState extends State<IndexPage> {
                         physics: const ScrollPhysics(
                             parent: BouncingScrollPhysics()),
                         itemBuilder: (BuildContext context, int index) {
-                          return CategoryWidget(
-                              name: repo.categories[index].name);
+                          return TextButton(
+                              onPressed: (() {
+                                controller.filterTransactionsByCategory(
+                                    controller.categories[index]);
+                                setState(() {
+                                  showingAll = false;
+                                });
+                                ;
+                              }),
+                              child: CategoryWidget(
+                                  name: controller.categories[index].name));
                         },
-                        itemCount: repo.categories.length,
+                        itemCount: controller.categories.length,
                       ),
                     )
                   : Container(),
               const SizedBox(height: 20),
               Expanded(
                 flex: 6,
-                child: SingleChildScrollView(
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.8,
-                    width: MediaQuery.of(context).size.height * 0.7,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[400],
-                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  width: MediaQuery.of(context).size.height * 0.7,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[400],
+                    borderRadius: BorderRadius.all(Radius.circular(5)),
+                  ),
+                  child: ListView.separated(
+                    itemBuilder: (context, index) => TransactionWidget(
+                      transaction: showingAll
+                          ? controller.transactions[index]
+                          : controller.transactionsFiltered[index],
                     ),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: MediaQuery.of(context).size.width * 0.05,
-                        vertical: MediaQuery.of(context).size.height * 0.01),
-                    child: Column(
-                      children: [
-                        for (var transaction in transactionRepo.transactions)
-                          TransactionWidget(
-                            transaction: transaction,
-                          ),
-                      ],
+                    itemCount: showingAll
+                        ? controller.transactions.length
+                        : controller.transactionsFiltered.length,
+                    separatorBuilder: (context, index) => const SizedBox(
+                      height: 10,
                     ),
                   ),
                 ),
-              )
+              ),
             ]),
           ),
         ]),

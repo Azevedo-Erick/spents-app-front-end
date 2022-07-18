@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:spents_app/models/type_enum.dart';
 
@@ -44,7 +42,7 @@ class _TransactionWidgetState extends State<TransactionWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  'Titulo',
+                  widget.transaction.title,
                   style: GoogleFonts.roboto(
                     fontSize: 24,
                     fontWeight: FontWeight.w500,

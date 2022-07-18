@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:spents_app/controllers/new_data_controller.dart';
+import 'package:spents_app/controllers/transactions_overview_controller.dart';
 
 import '../models/category_model.dart';
 import '../models/transaction_model.dart';
 import '../models/type_enum.dart';
-import '../repositories/category_repository.dart';
-import '../repositories/transaction_repository.dart';
-import '../widgets/category_widget.dart';
 
-class NewSpentPage extends StatefulWidget {
-  const NewSpentPage({Key? key}) : super(key: key);
+class NewData extends StatefulWidget {
+  const NewData({Key? key}) : super(key: key);
   @override
-  _NewSpentPageState createState() => _NewSpentPageState();
+  _NewDataState createState() => _NewDataState();
 }
 
-class _NewSpentPageState extends State<NewSpentPage> {
+class _NewDataState extends State<NewData> {
   Transaction _transaction = Transaction(
     id: '',
+    title: '',
     description: '',
     value: 0,
     type: Type.SPENT,
@@ -33,15 +33,15 @@ class _NewSpentPageState extends State<NewSpentPage> {
   @override
   void initState() {
     super.initState();
-    Provider.of<CategoryRepository>(context, listen: false).getAllCategories();
+    Provider.of<NewDataController>(context, listen: false).categories;
   }
 
   @override
   Widget build(BuildContext context) {
-    CategoryRepository categoryRepository =
-        Provider.of<CategoryRepository>(context);
-    TransactionRepository transactionRepo =
-        Provider.of<TransactionRepository>(context);
+    NewDataController newDataController =
+        Provider.of<NewDataController>(context);
+    TransactionOverviewController transactionOverviewController =
+        Provider.of<TransactionOverviewController>(context);
     return DefaultTabController(
       initialIndex: 0,
       length: 2,
@@ -63,6 +63,14 @@ class _NewSpentPageState extends State<NewSpentPage> {
           children: [
             Column(
               children: [
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Título',
+                  ),
+                  onChanged: (value) {
+                    _transaction.title = value;
+                  },
+                ),
                 TextFormField(
                   decoration: const InputDecoration(
                     labelText: 'Descrição',
@@ -95,20 +103,20 @@ class _NewSpentPageState extends State<NewSpentPage> {
                       onPressed: () {
                         setState(() {
                           _transaction.category =
-                              categoryRepository.categories[index];
+                              newDataController.categories[index];
                         });
                       },
                       child: Text(
-                        categoryRepository.categories[index].name,
+                        newDataController.categories[index].name,
                         style: TextStyle(
                           color: _transaction.category ==
-                                  categoryRepository.categories[index]
+                                  newDataController.categories[index]
                               ? Colors.blue
                               : null,
                         ),
                       ),
                     ),
-                    itemCount: categoryRepository.categories.length,
+                    itemCount: newDataController.categories.length,
                     separatorBuilder: (context, index) => const Divider(),
                   ),
                 ),
@@ -126,8 +134,10 @@ class _NewSpentPageState extends State<NewSpentPage> {
                             ))))
                     .toList(),
                 TextButton(
-                    onPressed: () =>
-                        transactionRepo.createTransaction(_transaction),
+                    onPressed: () => {
+                          newDataController.addTransaction(_transaction),
+                          transactionOverviewController.reloadData()
+                        },
                     child: Text("Criar"))
               ],
             ),
@@ -146,8 +156,10 @@ class _NewSpentPageState extends State<NewSpentPage> {
                   },
                 ),
                 TextButton(
-                    onPressed: () =>
-                        categoryRepository.createCategory(_category),
+                    onPressed: () => {
+                          newDataController.addCategory(_category),
+                          transactionOverviewController.reloadData()
+                        },
                     child: Text("Criar"))
               ],
             ),
