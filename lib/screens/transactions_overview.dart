@@ -77,54 +77,66 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
               controller.categories.isNotEmpty
                   ? Expanded(
                       flex: 1,
-                      child: ListView.separated(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        separatorBuilder: (context, index) => const SizedBox(
-                          width: 10,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
+                          color: Colors.blueGrey.shade900,
                         ),
-                        scrollDirection: Axis.horizontal,
-                        physics: const ScrollPhysics(
-                            parent: BouncingScrollPhysics()),
-                        itemBuilder: (BuildContext context, int index) {
-                          return TextButton(
-                              onPressed: (() {
-                                controller.filterTransactionsByCategory(
-                                    controller.categories[index]);
-                                setState(() {
-                                  showingAll = !showingAll;
-                                  print(showingAll);
-                                });
-                              }),
-                              child: CategoryWidget(
-                                  name: controller.categories[index].name));
-                        },
-                        itemCount: controller.categories.length,
-                      ),
-                    )
+                        child: ListView.separated(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          separatorBuilder: (context, index) => const SizedBox(
+                            width: 10,
+                          ),
+                          scrollDirection: Axis.horizontal,
+                          physics: const ScrollPhysics(
+                              parent: BouncingScrollPhysics()),
+                          itemBuilder: (BuildContext context, int index) {
+                            return TextButton(
+                                onPressed: (() {
+                                  controller.filterTransactionsByCategory(
+                                      controller.categories[index]);
+                                  setState(() {
+                                    showingAll = !showingAll;
+                                    print(showingAll);
+                                  });
+                                }),
+                                child: CategoryWidget(
+                                    name: controller.categories[index].name));
+                          },
+                          itemCount: controller.categories.length,
+                        ),
+                      ))
                   : Container(),
               const SizedBox(height: 20),
               Expanded(
                 flex: 6,
-                child: Container(
+                child: Ink(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   height: MediaQuery.of(context).size.height * 0.8,
                   width: MediaQuery.of(context).size.height * 0.7,
                   decoration: BoxDecoration(
+                    color: Colors.blueGrey.shade900,
                     borderRadius: BorderRadius.all(Radius.circular(5)),
                   ),
                   child: ListView.separated(
-                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 50),
-                    itemBuilder: (context, index) => TransactionWidget(
-                      transaction: showingAll
-                          ? controller.transactions[index]
-                          : controller.transactionsFiltered[index],
-                    ),
-                    itemCount: showingAll
-                        ? controller.transactions.length
-                        : controller.transactionsFiltered.length,
-                    separatorBuilder: (context, index) => const SizedBox(
-                      height: 10,
-                    ),
-                  ),
+                      itemBuilder: (context, index) => TransactionWidget(
+                            transaction: showingAll
+                                ? controller.transactions[index]
+                                : controller.transactionsFiltered[index],
+                          ),
+                      itemCount: showingAll
+                          ? controller.transactions.length
+                          : controller.transactionsFiltered.length,
+                      separatorBuilder: (context, index) => const Divider(
+                            height: 10,
+                          )),
                 ),
               ),
             ]),

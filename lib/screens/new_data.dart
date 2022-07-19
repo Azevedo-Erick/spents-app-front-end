@@ -29,6 +29,7 @@ class _NewDataState extends State<NewData> {
     id: '',
     name: '',
   );
+  int _index = 0;
   final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
@@ -47,6 +48,9 @@ class _NewDataState extends State<NewData> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
+          toolbarHeight: 60,
+          centerTitle: true,
+          elevation: 10,
           title: const Text('Adicionando...'),
           bottom: const TabBar(
             tabs: [
@@ -61,85 +65,114 @@ class _NewDataState extends State<NewData> {
         ),
         body: TabBarView(
           children: [
-            Column(
-              children: [
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Título',
-                  ),
-                  onChanged: (value) {
-                    _transaction.title = value;
-                  },
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Descrição',
-                  ),
-                  onChanged: (value) => _transaction.description = value,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Preencha a descrição';
-                    }
-                    return null;
-                  },
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Valor',
-                  ),
-                  onChanged: (value) =>
-                      _transaction.value = double.parse(value),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Preencha o valor';
-                    }
-                    return null;
-                  },
-                ),
-                Expanded(
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) => TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _transaction.category =
-                              newDataController.categories[index];
-                        });
-                      },
-                      child: Text(
-                        newDataController.categories[index].name,
-                        style: TextStyle(
-                          color: _transaction.category ==
-                                  newDataController.categories[index]
-                              ? Colors.blue
-                              : null,
-                        ),
+            Container(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  SafeArea(child: SizedBox(height: 20)),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Título',
+                      icon: Icon(Icons.title),
+                      labelStyle: TextStyle(
+                        color: Colors.black,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
-                    itemCount: newDataController.categories.length,
-                    separatorBuilder: (context, index) => const Divider(),
+                    onChanged: (value) {
+                      _transaction.title = value;
+                    },
                   ),
-                ),
-                ...Type.values
-                    .map((e) => TextButton(
+                  TextFormField(
+                    decoration: InputDecoration(
+                      labelText: 'Descrição',
+                      icon: Icon(Icons.description),
+                      labelStyle: TextStyle(
+                        color: Colors.black,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    onChanged: (value) => _transaction.description = value,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'Preencha a descrição';
+                      }
+                      return null;
+                    },
+                  ),
+                  Container(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          icon: Icon(Icons.attach_money),
+                          labelText: 'Valor',
+                          labelStyle: TextStyle(
+                            color: Colors.black,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        onChanged: (value) {
+                          _transaction.value = double.parse(value);
+                        },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Preencha o valor';
+                          }
+                          return null;
+                        },
+                      )),
+                  Expanded(
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) => TextButton(
                         onPressed: () {
                           setState(() {
-                            _transaction.type = e;
+                            _transaction.category =
+                                newDataController.categories[index];
                           });
                         },
-                        child: Text(e.toString(),
-                            style: TextStyle(
-                              color:
-                                  _transaction.type == e ? Colors.blue : null,
-                            ))))
-                    .toList(),
-                TextButton(
-                    onPressed: () => {
-                          newDataController.addTransaction(_transaction),
-                          transactionOverviewController.reloadData()
-                        },
-                    child: Text("Criar"))
-              ],
+                        child: Text(
+                          newDataController.categories[index].name,
+                          style: TextStyle(
+                            color: _transaction.category ==
+                                    newDataController.categories[index]
+                                ? Colors.blue
+                                : null,
+                          ),
+                        ),
+                      ),
+                      itemCount: newDataController.categories.length,
+                      separatorBuilder: (context, index) => const Divider(),
+                    ),
+                  ),
+                  ...Type.values
+                      .map((e) => TextButton(
+                          onPressed: () {
+                            setState(() {
+                              _transaction.type = e;
+                            });
+                          },
+                          child: Text(e.name,
+                              style: TextStyle(
+                                color:
+                                    _transaction.type == e ? Colors.blue : null,
+                              ))))
+                      .toList(),
+                  TextButton(
+                      onPressed: () => {
+                            newDataController.addTransaction(_transaction),
+                            transactionOverviewController.reloadData()
+                          },
+                      child: Text("Criar"))
+                ],
+              ),
             ),
             Column(
               children: [
