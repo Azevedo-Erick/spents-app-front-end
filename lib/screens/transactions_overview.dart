@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:spents_app/widgets/bar_chart_widget.dart';
 import '../controllers/transactions_overview_controller.dart';
 import '../widgets/category_widget.dart';
 import '../widgets/transaction_widget.dart';
@@ -25,14 +26,23 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
     TransactionOverviewController controller =
         Provider.of<TransactionOverviewController>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Meus Gastos'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => Navigator.pushNamed(context, '/new-data'),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(60),
+        child: AppBar(
+          centerTitle: true,
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(
+              bottom: Radius.circular(10),
+            ),
           ),
-        ],
+          title: const Text('Meus Gastos'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: () => Navigator.pushNamed(context, '/new-data'),
+            ),
+          ],
+        ),
       ),
       drawer: Drawer(
         child: SingleChildScrollView(
@@ -71,6 +81,8 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         child: Column(children: [
+          BarChartWidget(),
+          const SizedBox(height: 20),
           Expanded(
             flex: 1,
             child: Column(children: [
@@ -117,14 +129,14 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
                     ),
               const SizedBox(height: 20),
               Expanded(
-                flex: 6,
+                flex: 5,
                 child: Ink(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   height: MediaQuery.of(context).size.height * 0.8,
                   width: MediaQuery.of(context).size.height * 0.7,
                   decoration: BoxDecoration(
-                    color: Colors.blueGrey.shade900,
+                    color: Color.fromARGB(255, 0, 0, 0),
                     borderRadius: BorderRadius.all(Radius.circular(5)),
                   ),
                   child: ListView.separated(

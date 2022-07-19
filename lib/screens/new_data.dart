@@ -74,39 +74,48 @@ class _NewDataState extends State<NewData> {
                   children: [
                     Expanded(
                       flex: 1,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) => TextButton(
-                          onPressed: () {
-                            setState(() {
-                              _transaction.category =
-                                  newDataController.categories[index];
-                            });
-                          },
-                          child: Container(
-                            width: 110,
-                            height: 33,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 8),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(50),
-                              color: _transaction.category ==
-                                      newDataController.categories[index]
-                                  ? Colors.greenAccent.shade700
-                                  : Colors.green.shade600,
-                            ),
-                            child: Text(
-                              textAlign: TextAlign.center,
-                              newDataController.categories[index].name,
-                              style: TextStyle(
-                                color: Colors.white,
+                      child: Container(
+                        clipBehavior: Clip.antiAlias,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 12),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.blueGrey.shade900,
+                        ),
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) => TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _transaction.category =
+                                    newDataController.categories[index];
+                              });
+                            },
+                            child: Container(
+                              width: 110,
+                              height: 33,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 8),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(50),
+                                color: _transaction.category ==
+                                        newDataController.categories[index]
+                                    ? Colors.greenAccent.shade700
+                                    : Colors.green.shade600,
+                              ),
+                              child: Text(
+                                textAlign: TextAlign.center,
+                                newDataController.categories[index].name,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
+                          itemCount: newDataController.categories.length,
+                          separatorBuilder: (context, index) =>
+                              const Divider(color: Colors.black, height: 20),
                         ),
-                        itemCount: newDataController.categories.length,
-                        separatorBuilder: (context, index) =>
-                            const Divider(color: Colors.black, height: 20),
                       ),
                     ),
                     Expanded(
@@ -119,6 +128,7 @@ class _NewDataState extends State<NewData> {
                               children: [
                                 Flexible(
                                     fit: FlexFit.tight,
+                                    flex: 5,
                                     child: TextFormField(
                                       decoration: InputDecoration(
                                         labelText: 'Título',
@@ -135,29 +145,56 @@ class _NewDataState extends State<NewData> {
                                         _transaction.title = value;
                                       },
                                     )),
-                                ...Type.values
-                                    .map((e) => GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            _transaction.type = e;
-                                          });
-                                        },
-                                        child: Container(
-                                            margin: const EdgeInsets.symmetric(
-                                                horizontal: 8),
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 16, vertical: 8),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(50),
-                                              color: _transaction.type == e
-                                                  ? Colors.greenAccent.shade700
-                                                  : Colors.green.shade600,
-                                            ),
-                                            child: Text(e.name,
-                                                style: TextStyle(
-                                                    color: Colors.white)))))
-                                    .toList(),
+                                SizedBox(width: 10),
+                                Flexible(
+                                    fit: FlexFit.tight,
+                                    flex: 3,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 12),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.blueGrey.shade900,
+                                      ),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          ...Type.values
+                                              .map((e) => GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      _transaction.type = e;
+                                                    });
+                                                  },
+                                                  child: Container(
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 12,
+                                                              vertical: 8),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(50),
+                                                        color:
+                                                            _transaction.type ==
+                                                                    e
+                                                                ? Colors
+                                                                    .greenAccent
+                                                                    .shade700
+                                                                : Colors.green
+                                                                    .shade600,
+                                                      ),
+                                                      child: Text(e.name,
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .white)))))
+                                              .toList(),
+                                        ],
+                                      ),
+                                    )),
                               ],
                             ),
                             TextFormField(

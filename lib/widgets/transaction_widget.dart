@@ -26,13 +26,13 @@ class _TransactionWidgetState extends State<TransactionWidget> {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(10),
               topRight: Radius.circular(10),
               bottomRight: Radius.circular(10),
               bottomLeft: Radius.circular(10)),
-          color: Colors.indigo),
+          color: Colors.blueGrey.shade900),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -41,18 +41,24 @@ class _TransactionWidgetState extends State<TransactionWidget> {
             children: [
               Text(
                 widget.transaction.title,
-                style: GoogleFonts.roboto(),
+                style: GoogleFonts.roboto(
+                  color: Colors.white,
+                ),
               ),
               Text(
                 widget.transaction.category.name,
-                style: GoogleFonts.comfortaa(),
+                style: GoogleFonts.comfortaa(
+                  color: Colors.white,
+                ),
               ),
             ],
           ),
           SizedBox(
             width: 140,
             child: AnimatedCrossFade(
-              duration: const Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 400),
+              firstCurve: Curves.easeInBack,
+              secondCurve: Curves.easeInBack,
               crossFadeState: _showingPrice
                   ? CrossFadeState.showFirst
                   : CrossFadeState.showSecond,
