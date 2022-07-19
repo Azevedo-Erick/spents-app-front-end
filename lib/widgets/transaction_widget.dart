@@ -63,23 +63,16 @@ class _TransactionWidgetState extends State<TransactionWidget> {
                   TextButton(
                     onPressed: _togglePrice,
                     child: Container(
-                      padding: EdgeInsets.all(3),
+                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(
-                          color: Colors.grey,
-                          width: 1.0,
-                        ),
+                        color: Colors.green.shade800,
+                        borderRadius: BorderRadius.circular(50),
                       ),
                       child: Text(
                         overflow: TextOverflow.ellipsis,
-                        'R\$ ${widget.transaction.value.toStringAsFixed(2)}',
+                        '${widget.transaction.type == Type.INCOME ? "+" : "-"} R\$ ${widget.transaction.value.toStringAsFixed(2)}',
                         style: GoogleFonts.robotoMono(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: widget.transaction.type == Type.INCOME
-                                ? Colors.green
-                                : Colors.red),
+                            fontSize: 16, color: Colors.white),
                       ),
                     ),
                   )

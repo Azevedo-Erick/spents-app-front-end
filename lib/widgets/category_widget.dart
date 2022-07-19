@@ -11,19 +11,17 @@ class CategoryWidget extends StatelessWidget {
       width: MediaQuery.of(context).size.width * 0.25,
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
       decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.grey,
-          width: 1,
-        ),
-        borderRadius: BorderRadius.circular(8),
+        color: Colors.green,
+        borderRadius: BorderRadius.circular(50),
       ),
       alignment: Alignment.center,
       child: Text(
         overflow: TextOverflow.ellipsis,
         name,
-        style: GoogleFonts.roboto(
+        style: GoogleFonts.nunito(
           fontSize: 16,
-          fontWeight: FontWeight.w400,
+          fontWeight: FontWeight.w300,
+          color: Colors.white,
         ),
       ),
     );

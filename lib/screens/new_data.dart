@@ -67,112 +67,179 @@ class _NewDataState extends State<NewData> {
           children: [
             Container(
               padding: const EdgeInsets.all(16),
+              height: MediaQuery.of(context).size.height,
               child: Column(
-                children: [
-                  SafeArea(child: SizedBox(height: 20)),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Título',
-                      icon: Icon(Icons.title),
-                      labelStyle: TextStyle(
-                        color: Colors.black,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onChanged: (value) {
-                      _transaction.title = value;
-                    },
-                  ),
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Descrição',
-                      icon: Icon(Icons.description),
-                      labelStyle: TextStyle(
-                        color: Colors.black,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    onChanged: (value) => _transaction.description = value,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Preencha a descrição';
-                      }
-                      return null;
-                    },
-                  ),
-                  Container(
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      child: TextFormField(
-                        keyboardType: TextInputType.number,
-                        decoration: InputDecoration(
-                          icon: Icon(Icons.attach_money),
-                          labelText: 'Valor',
-                          labelStyle: TextStyle(
-                            color: Colors.black,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          _transaction.value = double.parse(value);
-                        },
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Preencha o valor';
-                          }
-                          return null;
-                        },
-                      )),
-                  Expanded(
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) => TextButton(
-                        onPressed: () {
-                          setState(() {
-                            _transaction.category =
-                                newDataController.categories[index];
-                          });
-                        },
-                        child: Text(
-                          newDataController.categories[index].name,
-                          style: TextStyle(
-                            color: _transaction.category ==
-                                    newDataController.categories[index]
-                                ? Colors.blue
-                                : null,
-                          ),
-                        ),
-                      ),
-                      itemCount: newDataController.categories.length,
-                      separatorBuilder: (context, index) => const Divider(),
-                    ),
-                  ),
-                  ...Type.values
-                      .map((e) => TextButton(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) => TextButton(
                           onPressed: () {
                             setState(() {
-                              _transaction.type = e;
+                              _transaction.category =
+                                  newDataController.categories[index];
                             });
                           },
-                          child: Text(e.name,
+                          child: Container(
+                            width: 110,
+                            height: 33,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              color: _transaction.category ==
+                                      newDataController.categories[index]
+                                  ? Colors.greenAccent.shade700
+                                  : Colors.green.shade600,
+                            ),
+                            child: Text(
+                              textAlign: TextAlign.center,
+                              newDataController.categories[index].name,
                               style: TextStyle(
-                                color:
-                                    _transaction.type == e ? Colors.blue : null,
-                              ))))
-                      .toList(),
-                  TextButton(
-                      onPressed: () => {
-                            newDataController.addTransaction(_transaction),
-                            transactionOverviewController.reloadData()
-                          },
-                      child: Text("Criar"))
-                ],
-              ),
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                        itemCount: newDataController.categories.length,
+                        separatorBuilder: (context, index) =>
+                            const Divider(color: Colors.black, height: 20),
+                      ),
+                    ),
+                    Expanded(
+                        flex: 4,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Row(
+                              children: [
+                                Flexible(
+                                    fit: FlexFit.tight,
+                                    child: TextFormField(
+                                      decoration: InputDecoration(
+                                        labelText: 'Título',
+                                        icon: Icon(Icons.title),
+                                        labelStyle: TextStyle(
+                                          color: Colors.black,
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      onChanged: (value) {
+                                        _transaction.title = value;
+                                      },
+                                    )),
+                                ...Type.values
+                                    .map((e) => GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            _transaction.type = e;
+                                          });
+                                        },
+                                        child: Container(
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 16, vertical: 8),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(50),
+                                              color: _transaction.type == e
+                                                  ? Colors.greenAccent.shade700
+                                                  : Colors.green.shade600,
+                                            ),
+                                            child: Text(e.name,
+                                                style: TextStyle(
+                                                    color: Colors.white)))))
+                                    .toList(),
+                              ],
+                            ),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                labelText: 'Descrição',
+                                icon: Icon(Icons.description),
+                                labelStyle: TextStyle(
+                                  color: Colors.black,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              onChanged: (value) =>
+                                  _transaction.description = value,
+                              validator: (value) {
+                                if (value!.isEmpty) {
+                                  return 'Preencha a descrição';
+                                }
+                                return null;
+                              },
+                            ),
+                            Container(
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                child: TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+                                    icon: Icon(Icons.attach_money),
+                                    labelText: 'Valor',
+                                    labelStyle: TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  onChanged: (value) {
+                                    _transaction.value = double.parse(value);
+                                  },
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Preencha o valor';
+                                    }
+                                    return null;
+                                  },
+                                )),
+                            Center(
+                                child: GestureDetector(
+                                    onTap: () => {
+                                          newDataController
+                                              .addTransaction(_transaction),
+                                          transactionOverviewController
+                                              .reloadData()
+                                        },
+                                    child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16, vertical: 8),
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey
+                                                    .withOpacity(0.9),
+                                                blurRadius: 10,
+                                                offset: Offset(0, 5),
+                                              )
+                                            ],
+                                            color: Colors.greenAccent.shade700),
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.5,
+                                        child: Center(
+                                            child: Text(
+                                          "Adicionar",
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.white),
+                                        )))))
+                          ],
+                        ))
+                  ]),
             ),
             Column(
               children: [

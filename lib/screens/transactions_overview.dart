@@ -97,8 +97,8 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
                           physics: const ScrollPhysics(
                               parent: BouncingScrollPhysics()),
                           itemBuilder: (BuildContext context, int index) {
-                            return TextButton(
-                                onPressed: (() {
+                            return GestureDetector(
+                                onTap: (() {
                                   controller.filterTransactionsByCategory(
                                       controller.categories[index]);
                                   setState(() {
@@ -112,7 +112,9 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
                           itemCount: controller.categories.length,
                         ),
                       ))
-                  : Container(),
+                  : Container(
+                      child: Text("Nenhuma categoria cadastrada"),
+                    ),
               const SizedBox(height: 20),
               Expanded(
                 flex: 6,
