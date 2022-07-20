@@ -25,6 +25,9 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
   Widget build(BuildContext context) {
     TransactionOverviewController controller =
         Provider.of<TransactionOverviewController>(context);
+
+    controller.getOneWeekTransactions(DateTime.parse('2022-07-13'));
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
@@ -81,7 +84,7 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         child: Column(children: [
-          BarChartWidget(),
+          BarChartWidget(weekExpenses: controller.weekExpenses),
           const SizedBox(height: 20),
           Expanded(
             flex: 1,
@@ -110,16 +113,17 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
                               parent: BouncingScrollPhysics()),
                           itemBuilder: (BuildContext context, int index) {
                             return GestureDetector(
-                                onTap: (() {
-                                  controller.filterTransactionsByCategory(
-                                      controller.categories[index]);
-                                  setState(() {
-                                    showingAll = !showingAll;
-                                    print(showingAll);
-                                  });
-                                }),
+                                onTap: (() {}),
                                 child: CategoryWidget(
-                                    name: controller.categories[index].name));
+                                    name: controller.categories[index].name,
+                                    onPressed: () {
+                                      controller.filterTransactionsByCategory(
+                                          controller.categories[index]);
+                                      print("a");
+                                      setState(() {
+                                        showingAll = !showingAll;
+                                      });
+                                    }));
                           },
                           itemCount: controller.categories.length,
                         ),

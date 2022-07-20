@@ -18,15 +18,18 @@ class _NewDataState extends State<NewData> {
     id: '',
     title: '',
     description: '',
+    date: DateTime.now(),
     value: 0,
     type: Type.SPENT,
     category: Category(
       id: '',
+      color: '',
       name: '',
     ),
   );
   Category _category = Category(
     id: '',
+    color: '',
     name: '',
   );
   int _index = 0;

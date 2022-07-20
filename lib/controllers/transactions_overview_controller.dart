@@ -8,6 +8,7 @@ import 'package:spents_app/repositories/category_repository.dart';
 import 'package:spents_app/repositories/transaction_repository.dart';
 
 import '../models/transaction_model.dart';
+import '../models/week_expenses_model.dart';
 
 class TransactionOverviewController extends ChangeNotifier {
   TransactionOverviewController();
@@ -15,9 +16,14 @@ class TransactionOverviewController extends ChangeNotifier {
   List<Transaction> _transactions = [];
   List<Category> _categories = [];
   List<Transaction> _transactionsFiltered = [];
+  List<WeekExpenses> _weekExpenses = [];
 
   UnmodifiableListView<Transaction> get transactionsFiltered {
     return UnmodifiableListView(_transactionsFiltered);
+  }
+
+  UnmodifiableListView<WeekExpenses> get weekExpenses {
+    return UnmodifiableListView(_weekExpenses);
   }
 
   UnmodifiableListView<Category> get categories {
@@ -59,6 +65,15 @@ class TransactionOverviewController extends ChangeNotifier {
     TransactionRepository repo = TransactionRepository();
     repo.createTransaction(body).then((value) {
       _transactions.add(transaction);
+      notifyListeners();
+    });
+  }
+
+  void getOneWeekTransactions(DateTime date) {
+    String dateString = date.toString().substring(0, 10);
+    TransactionRepository repo = TransactionRepository();
+    repo.getOneWeekTransactions(dateString).then((value) {
+      _weekExpenses = value;
       notifyListeners();
     });
   }

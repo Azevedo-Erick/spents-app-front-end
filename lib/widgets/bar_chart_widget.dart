@@ -1,141 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../models/week_expenses_model.dart';
+
 class BarChartWidget extends StatefulWidget {
-  const BarChartWidget({Key? key}) : super(key: key);
+  List<WeekExpenses> weekExpenses;
+
+  BarChartWidget({Key? key, required this.weekExpenses}) : super(key: key);
 
   @override
   _BarChartWidgetState createState() => _BarChartWidgetState();
 }
 
 class _BarChartWidgetState extends State<BarChartWidget> {
-  List<Map<String, Set>> expenses = [
-    {
-      'Monday': {
-        {
-          'name': 'Cafe',
-          'value': 72,
-        },
-        {
-          'name': 'Lanche',
-          'value': 20,
-        },
-        {
-          'name': 'Almoço',
-          'value': 30,
-        },
-      },
-    },
-    {
-      'Tuesday': {
-        {
-          'name': 'Cafe',
-          'value': 10,
-        },
-        {
-          'name': 'Lanche',
-          'value': 35,
-        },
-        {
-          'name': 'Almoço',
-          'value': 30,
-        },
-      },
-    },
-    {
-      'Wednesday': {
-        {
-          'name': 'Cafe',
-          'value': 10,
-        },
-        {
-          'name': 'Lanche',
-          'value': 20,
-        },
-        {
-          'name': 'Almoço',
-          'value': 30,
-        },
-      },
-    },
-    {
-      'Thursday': {
-        {
-          'name': 'Cafe',
-          'value': 10,
-        },
-        {
-          'name': 'Lanche',
-          'value': 20,
-        },
-        {
-          'name': 'Almoço',
-          'value': 40,
-        },
-      },
-    },
-    {
-      'Friday': {
-        {
-          'name': 'Cafe',
-          'value': 10,
-        },
-        {
-          'name': 'Lanche',
-          'value': 110,
-        },
-        {
-          'name': 'Almoço',
-          'value': 30,
-        },
-      },
-    },
-    {
-      'Saturday': {
-        {
-          'name': 'Cafe',
-          'value': 70,
-        },
-        {
-          'name': 'Lanche',
-          'value': 20,
-        },
-        {
-          'name': 'Almoço',
-          'value': 30,
-        },
-      },
-    },
-    {
-      'Sunday': {
-        {
-          'name': 'Cafe',
-          'value': 10,
-        },
-        {
-          'name': 'Lanche',
-          'value': 20,
-        },
-        {
-          'name': 'Almoço',
-          'value': 30,
-        },
-      },
-    },
-  ];
   @override
   Widget build(BuildContext context) {
     double mostExpensive = 0;
-    expenses.forEach((day) {
-      day.forEach((key, value) {
-        double total = 0;
-        for (var expense in value) {
-          total += expense['value'];
-        }
-        if (total > mostExpensive) {
-          mostExpensive = total;
-        }
+    widget.weekExpenses.forEach((element) {
+      double oneDayTotal = 0;
+      element.transactions.forEach((transaction) {
+        oneDayTotal += transaction.value;
       });
+      if (oneDayTotal > mostExpensive) {
+        mostExpensive = oneDayTotal;
+      }
     });
     return Container(
       decoration: BoxDecoration(
@@ -158,16 +46,14 @@ class _BarChartWidgetState extends State<BarChartWidget> {
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ...expenses.map((e) {
+              ...widget.weekExpenses.map((e) {
                 double amountSpent = 0;
-                e.forEach((key, value) {
-                  value.forEach((expense) {
-                    amountSpent += expense['value'];
-                  });
+                e.transactions.forEach((value) {
+                  amountSpent += value.value;
                 });
                 return _BarWidget(
                     mostExpensive: mostExpensive,
-                    label: e.keys.first.substring(0, 3),
+                    label: e.weekDay.substring(0, 3),
                     amountSpent: amountSpent);
               }).toList()
             ],
