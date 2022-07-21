@@ -30,8 +30,9 @@ class _BarChartWidgetState extends State<BarChartWidget> {
         color: Colors.blueGrey.shade900,
         borderRadius: BorderRadius.circular(10),
       ),
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             'Gasto Semanal',
@@ -52,9 +53,11 @@ class _BarChartWidgetState extends State<BarChartWidget> {
                   amountSpent += value.value;
                 });
                 return _BarWidget(
-                    mostExpensive: mostExpensive,
-                    label: e.weekDay.substring(0, 3),
-                    amountSpent: amountSpent);
+                  mostExpensive: mostExpensive,
+                  label: e.weekDay.substring(0, 3),
+                  amountSpent: amountSpent,
+                  width: MediaQuery.of(context).size.width * 0.02,
+                );
               }).toList()
             ],
           )
@@ -68,14 +71,15 @@ class _BarWidget extends StatelessWidget {
   final String label;
   final double amountSpent;
   final double mostExpensive;
-
+  final double width;
   final double _maxHeight = 150;
 
   const _BarWidget(
       {Key? key,
       required this.label,
       required this.amountSpent,
-      required this.mostExpensive})
+      required this.mostExpensive,
+      required this.width})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -94,7 +98,7 @@ class _BarWidget extends StatelessWidget {
         ),
         Container(
           height: barHeight,
-          width: 16,
+          width: width,
           decoration: BoxDecoration(
             color: Colors.green,
             borderRadius: BorderRadius.circular(8),

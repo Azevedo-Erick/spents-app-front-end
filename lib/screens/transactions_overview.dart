@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:spents_app/models/week_expenses_model.dart';
 import 'package:spents_app/widgets/bar_chart_widget.dart';
 import '../controllers/transactions_overview_controller.dart';
 import '../widgets/category_widget.dart';
@@ -21,6 +23,7 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
   }
 
   bool showingAll = true;
+  bool seeingWeekExpenses = true;
   @override
   Widget build(BuildContext context) {
     TransactionOverviewController controller =
@@ -84,14 +87,61 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         child: Column(children: [
-          BarChartWidget(weekExpenses: controller.weekExpenses),
+          seeingWeekExpenses
+              ? Stack(children: [
+                  BarChartWidget(weekExpenses: controller.weekExpenses),
+                  Positioned(
+                      top: 1,
+                      right: 2,
+                      child: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              seeingWeekExpenses = false;
+                            });
+                          },
+                          icon: Icon(Icons.close),
+                          iconSize: 20,
+                          color: Colors.white)),
+                ])
+              : Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.blueGrey.shade900,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  child: Stack(
+                    children: [
+                      Positioned(
+                          top: -10,
+                          right: -10,
+                          child: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  seeingWeekExpenses = true;
+                                });
+                              },
+                              icon: Icon(Icons.crop_square_rounded),
+                              iconSize: 20,
+                              color: Colors.white)),
+                      Center(
+                        child: Text(
+                          'Gasto Semanal',
+                          style: GoogleFonts.nunito(
+                            color: Colors.white,
+                            fontSize: 21,
+                            fontWeight: FontWeight.w300,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )),
           const SizedBox(height: 20),
           Expanded(
-            flex: 1,
             child: Column(children: [
               controller.categories.isNotEmpty
                   ? Expanded(
-                      flex: 1,
+                      flex: seeingWeekExpenses ? 2 : 1,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 10),
@@ -112,18 +162,18 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
                           physics: const ScrollPhysics(
                               parent: BouncingScrollPhysics()),
                           itemBuilder: (BuildContext context, int index) {
-                            return GestureDetector(
-                                onTap: (() {}),
+                            return TextButton(
+                                onPressed: (() {
+                                  controller.filterTransactionsByCategory(
+                                      controller.categories[index]);
+                                  setState(() {
+                                    showingAll = !showingAll;
+                                  });
+                                }),
                                 child: CategoryWidget(
-                                    name: controller.categories[index].name,
-                                    onPressed: () {
-                                      controller.filterTransactionsByCategory(
-                                          controller.categories[index]);
-                                      print("a");
-                                      setState(() {
-                                        showingAll = !showingAll;
-                                      });
-                                    }));
+                                  name: controller.categories[index].name,
+                                  color: controller.categories[index].color,
+                                ));
                           },
                           itemCount: controller.categories.length,
                         ),
@@ -133,7 +183,7 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
                     ),
               const SizedBox(height: 20),
               Expanded(
-                flex: 5,
+                flex: 9,
                 child: Ink(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

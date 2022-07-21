@@ -74,6 +74,40 @@ class TransactionOverviewController extends ChangeNotifier {
     TransactionRepository repo = TransactionRepository();
     repo.getOneWeekTransactions(dateString).then((value) {
       _weekExpenses = value;
+      //sort list by weekDay correctly (Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday)
+      _weekExpenses.sort((a, b) {
+        if (a.weekDay == 'Monday') {
+          return -1;
+        } else if (b.weekDay == 'Monday') {
+          return 1;
+        } else if (a.weekDay == 'Tuesday') {
+          return -1;
+        } else if (b.weekDay == 'Tuesday') {
+          return 1;
+        } else if (a.weekDay == 'Wednesday') {
+          return -1;
+        } else if (b.weekDay == 'Wednesday') {
+          return 1;
+        } else if (a.weekDay == 'Thursday') {
+          return -1;
+        } else if (b.weekDay == 'Thursday') {
+          return 1;
+        } else if (a.weekDay == 'Friday') {
+          return -1;
+        } else if (b.weekDay == 'Friday') {
+          return 1;
+        } else if (a.weekDay == 'Saturday') {
+          return -1;
+        } else if (b.weekDay == 'Saturday') {
+          return 1;
+        } else if (a.weekDay == 'Sunday') {
+          return -1;
+        } else if (b.weekDay == 'Sunday') {
+          return 1;
+        }
+        return 0;
+      });
+
       notifyListeners();
     });
   }

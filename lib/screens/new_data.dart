@@ -33,7 +33,52 @@ class _NewDataState extends State<NewData> {
     name: '',
   );
   int _index = 0;
+
+  double _red = 0, _green = 0, _blue = 0;
+
   final _formKey = GlobalKey<FormState>();
+
+  String rgbToHex(double color) {
+    List<String> elements = [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F"
+    ];
+    if (color == "0") {
+      return "00";
+    }
+    double value = color / 16;
+    //get only decimal part
+    double decimalPart = value - value.floor();
+    //get only integer part
+    int integerPart = value.floor();
+    String hex = "";
+
+    if (integerPart > elements.length - 1) {
+      integerPart = elements.length - 1;
+    }
+    hex += elements[integerPart];
+
+    if (decimalPart * 16 > elements.length - 1) {
+      decimalPart = elements.length - 1;
+    }
+    hex += elements[decimalPart.toInt()];
+
+    return hex;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -295,8 +340,49 @@ class _NewDataState extends State<NewData> {
                     return null;
                   },
                 ),
+                Slider(
+                    value: _red,
+                    onChanged: (value) {
+                      setState(() {
+                        _red = value;
+                      });
+                    },
+                    min: 0,
+                    max: 255,
+                    label: 'R'),
+                Slider(
+                    value: _green,
+                    onChanged: (value) {
+                      setState(() {
+                        _green = value;
+                      });
+                    },
+                    min: 0,
+                    max: 255,
+                    label: 'G'),
+                Slider(
+                    value: _blue,
+                    onChanged: (value) {
+                      setState(() {
+                        _blue = value;
+                      });
+                    },
+                    min: 0,
+                    max: 255,
+                    label: 'B'),
+                Container(
+                  height: 30,
+                  width: 30,
+                  child: Text(
+                      "${rgbToHex(_red)}${rgbToHex(_green)}${rgbToHex(_blue)}"),
+                  decoration: BoxDecoration(
+                      color: Color(int.parse(
+                          "0XFF${rgbToHex(_red)}${rgbToHex(_green)}${rgbToHex(_blue)}"))),
+                ),
                 TextButton(
                     onPressed: () => {
+                          _category.color =
+                              "#${rgbToHex(_red)}${rgbToHex(_green)}${rgbToHex(_blue)}",
                           newDataController.addCategory(_category),
                           transactionOverviewController.reloadData()
                         },
