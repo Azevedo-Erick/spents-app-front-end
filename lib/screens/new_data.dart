@@ -329,8 +329,15 @@ class _NewDataState extends State<NewData> {
             Column(
               children: [
                 TextFormField(
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Nome',
+                    icon: Icon(Icons.title),
+                    labelStyle: TextStyle(
+                      color: Colors.black,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   onChanged: (value) => _category.name = value,
                   validator: (value) {
@@ -340,42 +347,50 @@ class _NewDataState extends State<NewData> {
                     return null;
                   },
                 ),
-                Slider(
-                    value: _red,
-                    onChanged: (value) {
-                      setState(() {
-                        _red = value;
-                      });
-                    },
-                    min: 0,
-                    max: 255,
-                    label: 'R'),
-                Slider(
-                    value: _green,
-                    onChanged: (value) {
-                      setState(() {
-                        _green = value;
-                      });
-                    },
-                    min: 0,
-                    max: 255,
-                    label: 'G'),
-                Slider(
-                    value: _blue,
-                    onChanged: (value) {
-                      setState(() {
-                        _blue = value;
-                      });
-                    },
-                    min: 0,
-                    max: 255,
-                    label: 'B'),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  child: Slider(
+                      value: _red,
+                      onChanged: (value) {
+                        setState(() {
+                          _red = value;
+                        });
+                      },
+                      min: 0,
+                      max: 255,
+                      label: 'R'),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  child: Slider(
+                      value: _green,
+                      onChanged: (value) {
+                        setState(() {
+                          _green = value;
+                        });
+                      },
+                      min: 0,
+                      max: 255,
+                      label: 'G'),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.5,
+                  child: Slider(
+                      value: _blue,
+                      onChanged: (value) {
+                        setState(() {
+                          _blue = value;
+                        });
+                      },
+                      min: 0,
+                      max: 255,
+                      label: 'Blue'),
+                ),
                 Container(
-                  height: 30,
-                  width: 30,
-                  child: Text(
-                      "${rgbToHex(_red)}${rgbToHex(_green)}${rgbToHex(_blue)}"),
+                  height: 60,
+                  width: 60,
                   decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
                       color: Color(int.parse(
                           "0XFF${rgbToHex(_red)}${rgbToHex(_green)}${rgbToHex(_blue)}"))),
                 ),

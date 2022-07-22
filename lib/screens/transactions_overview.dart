@@ -23,7 +23,6 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
   }
 
   bool showingAll = true;
-  bool seeingWeekExpenses = true;
   @override
   Widget build(BuildContext context) {
     TransactionOverviewController controller =
@@ -87,61 +86,13 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         child: Column(children: [
-          seeingWeekExpenses
-              ? Stack(children: [
-                  BarChartWidget(weekExpenses: controller.weekExpenses),
-                  Positioned(
-                      top: 1,
-                      right: 2,
-                      child: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              seeingWeekExpenses = false;
-                            });
-                          },
-                          icon: Icon(Icons.close),
-                          iconSize: 20,
-                          color: Colors.white)),
-                ])
-              : Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.blueGrey.shade900,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                  child: Stack(
-                    children: [
-                      Positioned(
-                          top: -10,
-                          right: -10,
-                          child: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  seeingWeekExpenses = true;
-                                });
-                              },
-                              icon: Icon(Icons.crop_square_rounded),
-                              iconSize: 20,
-                              color: Colors.white)),
-                      Center(
-                        child: Text(
-                          'Gasto Semanal',
-                          style: GoogleFonts.nunito(
-                            color: Colors.white,
-                            fontSize: 21,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )),
+          BarChartWidget(weekExpenses: controller.weekExpenses),
           const SizedBox(height: 20),
           Expanded(
             child: Column(children: [
               controller.categories.isNotEmpty
                   ? Expanded(
-                      flex: seeingWeekExpenses ? 2 : 1,
+                      flex: 2,
                       child: Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 10),
