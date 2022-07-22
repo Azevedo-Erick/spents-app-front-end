@@ -28,8 +28,6 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
     TransactionOverviewController controller =
         Provider.of<TransactionOverviewController>(context);
 
-    controller.getOneWeekTransactions(DateTime.parse('2022-07-13'));
-
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
@@ -86,7 +84,7 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         child: Column(children: [
-          BarChartWidget(weekExpenses: controller.weekExpenses),
+          BarChartWidget(),
           const SizedBox(height: 20),
           Expanded(
             child: Column(children: [
@@ -139,7 +137,6 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   height: MediaQuery.of(context).size.height * 0.8,
-                  width: MediaQuery.of(context).size.height * 0.7,
                   decoration: BoxDecoration(
                     color: Color.fromARGB(255, 0, 0, 0),
                     borderRadius: BorderRadius.all(Radius.circular(5)),

@@ -119,4 +119,9 @@ class TransactionOverviewController extends ChangeNotifier {
     categories;
     notifyListeners();
   }
+
+  void reloadWeekExpenses() {
+    _weekExpenses.clear();
+    notifyListeners();
+  }
 }
