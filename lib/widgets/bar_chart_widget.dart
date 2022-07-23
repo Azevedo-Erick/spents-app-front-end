@@ -15,7 +15,7 @@ class BarChartWidget extends StatefulWidget {
 class _BarChartWidgetState extends State<BarChartWidget> {
   bool _isCollapsed = false;
   DateTime _selectedDate = DateTime.parse('2022-07-18');
-
+  bool _seeingDate = false;
   @override
   void initState() {
     super.initState();
@@ -23,83 +23,90 @@ class _BarChartWidgetState extends State<BarChartWidget> {
         .getOneWeekTransactions(_selectedDate);
   }
 
+  double _calcMostExpensiveTransaction(
+      TransactionOverviewController controller) {
+    double mostExpensive = 0;
+    for (var element in controller.weekExpenses) {
+      double oneDayTotal = 0;
+      for (var transaction in element.transactions) {
+        oneDayTotal += transaction.value;
+      }
+      if (oneDayTotal > mostExpensive) {
+        mostExpensive = oneDayTotal;
+      }
+    }
+    return mostExpensive;
+  }
+
+  Widget _getTitleHeader() {
+    return GestureDetector(
+      onDoubleTap: () {
+        setState(() {
+          _isCollapsed = !_isCollapsed;
+        });
+      },
+      onTap: () {
+        setState(() {
+          _seeingDate = !_seeingDate;
+        });
+      },
+      onLongPress: (() {
+        setState(() {
+          _selectedDate = DateTime.now();
+        });
+      }),
+      child: Text(
+        _seeingDate
+            ? '${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}'
+            : 'Gasto Semanal',
+        style: GoogleFonts.nunito(
+          color: Colors.white,
+          fontSize: 21,
+          fontWeight: FontWeight.w300,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<TransactionOverviewController>(
         builder: (context, value, child) {
-      double mostExpensive = 0;
-      for (var element in value.weekExpenses) {
-        double oneDayTotal = 0;
-        for (var transaction in element.transactions) {
-          oneDayTotal += transaction.value;
-        }
-        if (oneDayTotal > mostExpensive) {
-          mostExpensive = oneDayTotal;
-        }
-      }
+      double mostExpensive = _calcMostExpensiveTransaction(value);
 
       return GestureDetector(
-        onHorizontalDragEnd: (details) {
-          if (details.primaryVelocity == 0) {
-            return;
-          }
-          if (details.primaryVelocity! > 0) {
-            setState(() {
-              _selectedDate = _selectedDate.add(Duration(days: 7));
-            });
-          } else {
-            setState(() {
-              _selectedDate = _selectedDate.subtract(Duration(days: 7));
-            });
-          }
-          Provider.of<TransactionOverviewController>(context, listen: false)
-              .reloadWeekExpenses();
-          Provider.of<TransactionOverviewController>(context, listen: false)
-              .getOneWeekTransactions(_selectedDate);
-        },
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.blueGrey.shade900,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: _isCollapsed
-              ? Center(
-                  child: GestureDetector(
-                    onDoubleTap: () {
-                      setState(() {
-                        _isCollapsed = !_isCollapsed;
-                      });
-                    },
-                    child: Text(
-                      'Gasto Semanal',
-                      style: GoogleFonts.nunito(
-                        color: Colors.white,
-                        fontSize: 21,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                  ),
-                )
-              : Stack(children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          onHorizontalDragEnd: (details) {
+            if (details.primaryVelocity == 0) {
+              return;
+            }
+            if (details.primaryVelocity! < 0) {
+              setState(() {
+                _selectedDate = _selectedDate.add(Duration(days: 7));
+              });
+            } else {
+              setState(() {
+                _selectedDate = _selectedDate.subtract(Duration(days: 7));
+              });
+            }
+            Provider.of<TransactionOverviewController>(context, listen: false)
+                .reloadWeekExpenses();
+            Provider.of<TransactionOverviewController>(context, listen: false)
+                .getOneWeekTransactions(_selectedDate);
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.blueGrey.shade900,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: _isCollapsed
+                ? Center(
+                    child: _getTitleHeader(),
+                  )
+                : Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      GestureDetector(
-                        onDoubleTap: () {
-                          setState(() {
-                            _isCollapsed = !_isCollapsed;
-                          });
-                        },
-                        child: Text(
-                          'Gasto Semanal',
-                          style: GoogleFonts.nunito(
-                            color: Colors.white,
-                            fontSize: 21,
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                      ),
+                      _getTitleHeader(),
                       const SizedBox(height: 10),
                       value.weekExpenses.isEmpty
                           ? Text(
@@ -130,10 +137,8 @@ class _BarChartWidgetState extends State<BarChartWidget> {
                               ],
                             )
                     ],
-                  )
-                ]),
-        ),
-      );
+                  ),
+          ));
     });
   }
 }
@@ -154,7 +159,8 @@ class _BarWidget extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final barHeight = amountSpent / mostExpensive * _maxHeight;
+    final barHeight =
+        amountSpent / (mostExpensive == 0 ? 1 : mostExpensive) * _maxHeight;
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,

@@ -60,9 +60,9 @@ class _NewDataState extends State<NewData> {
       return "00";
     }
     double value = color / 16;
-    //get only decimal part
+
     double decimalPart = value - value.floor();
-    //get only integer part
+
     int integerPart = value.floor();
     String hex = "";
 
