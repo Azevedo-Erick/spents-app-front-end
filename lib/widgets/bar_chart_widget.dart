@@ -174,11 +174,22 @@ class _BarWidget extends StatelessWidget {
           height: 6,
         ),
         Container(
-          height: barHeight,
           width: width,
           decoration: BoxDecoration(
-            color: Colors.green,
+            color: Color.fromARGB(255, 250, 250, 250),
             borderRadius: BorderRadius.circular(8),
+          ),
+          height: _maxHeight,
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              height: barHeight,
+              width: width,
+              decoration: BoxDecoration(
+                color: Colors.green,
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
           ),
         ),
         Text(
