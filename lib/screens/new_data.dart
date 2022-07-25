@@ -337,73 +337,86 @@ class _NewDataState extends State<NewData> {
                     ]),
               ),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  TextFormField(
-                    decoration: InputDecoration(
-                      labelText: 'Nome',
-                      icon: Icon(Icons.title),
-                      labelStyle: TextStyle(
-                        color: Colors.black,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
+                  SafeArea(
+                    child: SizedBox(
+                      height: 10,
                     ),
-                    onChanged: (value) => _category.name = value,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Preencha o nome';
-                      }
-                      return null;
-                    },
                   ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    child: Slider(
-                        value: _red,
-                        onChanged: (value) {
-                          setState(() {
-                            _red = value;
-                          });
-                        },
-                        min: 0,
-                        max: 255,
-                        label: 'R'),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: 'Nome',
+                            icon: Icon(Icons.title),
+                            labelStyle: TextStyle(
+                              color: Colors.black,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          onChanged: (value) => _category.name = value,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Preencha o nome';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(25),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.9),
+                                blurRadius: 10,
+                                offset: Offset(0, 5),
+                              )
+                            ],
+                            color: Color(int.parse(
+                                "0XFF${rgbToHex(_red)}${rgbToHex(_green)}${rgbToHex(_blue)}"))),
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    child: Slider(
-                        value: _green,
-                        onChanged: (value) {
-                          setState(() {
-                            _green = value;
-                          });
-                        },
-                        min: 0,
-                        max: 255,
-                        label: 'G'),
-                  ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    child: Slider(
-                        value: _blue,
-                        onChanged: (value) {
-                          setState(() {
-                            _blue = value;
-                          });
-                        },
-                        min: 0,
-                        max: 255,
-                        label: 'Blue'),
-                  ),
-                  Container(
-                    height: 60,
-                    width: 60,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
-                        color: Color(int.parse(
-                            "0XFF${rgbToHex(_red)}${rgbToHex(_green)}${rgbToHex(_blue)}"))),
-                  ),
+                  Slider(
+                      value: _red,
+                      onChanged: (value) {
+                        setState(() {
+                          _red = value;
+                        });
+                      },
+                      min: 0,
+                      max: 255,
+                      label: 'R'),
+                  Slider(
+                      value: _green,
+                      onChanged: (value) {
+                        setState(() {
+                          _green = value;
+                        });
+                      },
+                      min: 0,
+                      max: 255,
+                      label: 'G'),
+                  Slider(
+                      value: _blue,
+                      onChanged: (value) {
+                        setState(() {
+                          _blue = value;
+                        });
+                      },
+                      min: 0,
+                      max: 255,
+                      label: 'B'),
                   TextButton(
                       onPressed: () => {
                             // show snack bar with SnackBarWidget
