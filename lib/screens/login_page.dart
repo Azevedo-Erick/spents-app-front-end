@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:validators/validators.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -10,7 +11,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
-  bool _isLogin = false;
+  bool _isLogin = true;
 
   late AnimationController _animationController;
 
@@ -26,13 +27,22 @@ class _LoginPageState extends State<LoginPage>
   @override
   void didUpdateWidget(LoginPage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _animationController.duration = Duration(milliseconds: 500);
+    _animationController.duration = Duration(milliseconds: 1000);
   }
 
   @override
   void dispose() {
     _animationController.dispose();
     super.dispose();
+  }
+
+  void _toggleFormMode() {
+    _animationController.forward(
+      from: 0.0,
+    );
+    setState(() {
+      _isLogin = !_isLogin;
+    });
   }
 
   @override
@@ -58,258 +68,357 @@ class _LoginPageState extends State<LoginPage>
               ),
             ),
           ),
-          Positioned(
-            top: _isLogin ? 0 : null,
-            bottom: _isLogin ? null : 0,
-            left: 0,
+          Center(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.7,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                width: MediaQuery.of(context).size.width * 0.6,
+                height: MediaQuery.of(context).size.height * 0.7,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(30)),
                 ),
-              ),
-              child: _isLogin
-                  ? Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            height: MediaQuery.of(context).size.height * 0.1,
-                            child: Icon(Icons.monetization_on,
-                                color: Colors.black, size: 72)),
-                        Spacer(),
-                        Text(
-                          'Login',
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 31, 122, 114),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Email',
-                              labelStyle: TextStyle(
-                                color: Color.fromARGB(255, 31, 122, 114),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 31, 122, 114),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 31, 122, 114),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Password',
-                              labelStyle: TextStyle(
-                                color: Color.fromARGB(255, 31, 122, 114),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 31, 122, 114),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 31, 122, 114),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Spacer(),
-                        TextButton(
-                          onPressed: () {},
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 31, 122, 114),
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            child: Text(
-                              'Login',
-                              style: GoogleFonts.nunito(
-                                fontSize: 20,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Spacer(),
-                        TextButton(
-                          onPressed: () {
-                            setState(() {
-                              _isLogin = !_isLogin;
-                            });
-                          },
-                          child: Text('Dont have an account?'),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: Text('Forgot Password?'),
-                        ),
-                      ],
-                    )
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            height: MediaQuery.of(context).size.height * 0.1,
-                            child: Icon(Icons.monetization_on,
-                                color: Colors.black, size: 72)),
-                        Spacer(),
-                        Text(
-                          'Register',
-                          style: TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Color.fromARGB(255, 31, 122, 114),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Email',
-                              labelStyle: TextStyle(
-                                color: Color.fromARGB(255, 31, 122, 114),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 31, 122, 114),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 31, 122, 114),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Password',
-                              labelStyle: TextStyle(
-                                color: Color.fromARGB(255, 31, 122, 114),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 31, 122, 114),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 31, 122, 114),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              labelText: 'Confirm Password',
-                              labelStyle: TextStyle(
-                                color: Color.fromARGB(255, 31, 122, 114),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 31, 122, 114),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color.fromARGB(255, 31, 122, 114),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        Spacer(),
-                        TextButton(
-                          onPressed: () {},
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 31, 122, 114),
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            child: Text(
-                              'Registrar',
-                              style: GoogleFonts.nunito(
-                                fontSize: 20,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Spacer(),
-                        TextButton(
-                            onPressed: () {
-                              setState(() {
-                                _isLogin = !_isLogin;
-                              });
-                            },
-                            child: Text('Fazer Login')),
-                      ],
-                    ),
-            ),
+                child: _isLogin
+                    ? _LoginWidget(
+                        animationController: _animationController,
+                        toggleFormMode: _toggleFormMode,
+                      )
+                    : _RegisterWidget(
+                        animationController: _animationController,
+                        toggleFormMode: _toggleFormMode,
+                      )),
           )
 
           // ),
         ],
       ),
+    );
+  }
+}
+
+class _LoginWidget extends StatefulWidget {
+  @override
+  _LoginWidgetState createState() => _LoginWidgetState();
+
+  Function toggleFormMode;
+  AnimationController animationController;
+  _LoginWidget(
+      {Key? key,
+      required this.toggleFormMode,
+      required this.animationController})
+      : super(key: key);
+}
+
+class _LoginWidgetState extends State<_LoginWidget> {
+  String email = '';
+  String password = '';
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.height * 0.1,
+            child: Icon(Icons.monetization_on, color: Colors.black, size: 72)),
+        Spacer(),
+        Text(
+          'Login',
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(255, 31, 122, 114),
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: TextFormField(
+            onChanged: (value) {
+              setState(() {
+                email = value;
+              });
+            },
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please enter some text';
+              }
+              if (isEmail(value) == false) {
+                return 'Please enter a valid email';
+              }
+              return null;
+            },
+            decoration: InputDecoration(
+              labelText: 'Email',
+              labelStyle: TextStyle(
+                color: Color.fromARGB(255, 31, 122, 114),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color.fromARGB(255, 31, 122, 114),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color.fromARGB(255, 31, 122, 114),
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: TextFormField(
+            onChanged: (value) {
+              setState(() {
+                password = value;
+              });
+            },
+            decoration: const InputDecoration(
+              labelText: 'Password',
+              labelStyle: TextStyle(
+                color: Color.fromARGB(255, 31, 122, 114),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color.fromARGB(255, 31, 122, 114),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color.fromARGB(255, 31, 122, 114),
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Spacer(),
+        TextButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/transactions-overview');
+          },
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 10,
+            ),
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 31, 122, 114),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Text(
+              'Login',
+              style: GoogleFonts.nunito(
+                fontSize: 20,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        Spacer(),
+        TextButton(
+          onPressed: () {
+            setState(() {
+              widget.toggleFormMode();
+            });
+          },
+          child: Text('Dont have an account?'),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        TextButton(
+          onPressed: () {},
+          child: Text('Forgot Password?'),
+        ),
+      ],
+    );
+  }
+}
+
+class _RegisterWidget extends StatefulWidget {
+  Function toggleFormMode;
+
+  AnimationController animationController;
+  @override
+  _RegisterWidgetState createState() => _RegisterWidgetState();
+
+  _RegisterWidget(
+      {Key? key,
+      required this.toggleFormMode,
+      required this.animationController})
+      : super(key: key);
+}
+
+class _RegisterWidgetState extends State<_RegisterWidget> {
+  String email = '';
+  String password = '';
+  String confirmPassword = '';
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.height * 0.1,
+            child: Icon(Icons.monetization_on, color: Colors.black, size: 72)),
+        Spacer(),
+        Text(
+          'Register',
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: Color.fromARGB(255, 31, 122, 114),
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: TextFormField(
+            onChanged: (value) => email = value,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please enter some text';
+              }
+              if (isEmail(value) == false) {
+                return 'Please enter a valid email';
+              }
+              return null;
+            },
+            decoration: InputDecoration(
+              labelText: 'Email',
+              labelStyle: TextStyle(
+                color: Color.fromARGB(255, 31, 122, 114),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color.fromARGB(255, 31, 122, 114),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color.fromARGB(255, 31, 122, 114),
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: TextFormField(
+            onChanged: (value) => password = value,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please enter some text';
+              }
+              if (value.length < 6) {
+                return 'Password must be at least 6 characters';
+              }
+              return null;
+            },
+            decoration: InputDecoration(
+              labelText: 'Password',
+              labelStyle: TextStyle(
+                color: Color.fromARGB(255, 31, 122, 114),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color.fromARGB(255, 31, 122, 114),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color.fromARGB(255, 31, 122, 114),
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: TextFormField(
+            onChanged: (value) => confirmPassword = value,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please enter some text';
+              }
+              if (value != password) {
+                return 'Passwords do not match';
+              }
+              return null;
+            },
+            decoration: InputDecoration(
+              labelText: 'Confirm Password',
+              labelStyle: TextStyle(
+                color: Color.fromARGB(255, 31, 122, 114),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color.fromARGB(255, 31, 122, 114),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Color.fromARGB(255, 31, 122, 114),
+                ),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 20,
+        ),
+        Spacer(),
+        TextButton(
+          onPressed: () {
+            print(email);
+
+            print(password);
+            print(confirmPassword);
+          },
+          child: Container(
+            padding: EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: 10,
+            ),
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 31, 122, 114),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Text(
+              'Registrar',
+              style: GoogleFonts.nunito(
+                fontSize: 20,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        Spacer(),
+        TextButton(
+            onPressed: () {
+              setState(() {
+                widget.toggleFormMode();
+              });
+            },
+            child: Text('Fazer Login')),
+      ],
     );
   }
 }

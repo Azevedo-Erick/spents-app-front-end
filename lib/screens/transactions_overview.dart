@@ -74,7 +74,7 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
                   trailing: Icon(Icons.exit_to_app),
                 ),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/new_spent');
+                  Navigator.pushNamed(context, '/login');
                 },
               ),
             ],

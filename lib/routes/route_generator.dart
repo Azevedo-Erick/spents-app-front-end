@@ -9,7 +9,7 @@ class RouteGenerator {
     final args = settings.arguments;
 
     switch (settings.name) {
-      case '/':
+      case '/transactions-overview':
         return MaterialPageRoute(builder: (_) => const TransactionsOverview());
       case '/new-data':
         return MaterialPageRoute(builder: (_) => const NewData());
