@@ -6,7 +6,13 @@ import '../models/transaction_model.dart';
 
 class TransactionWidget extends StatefulWidget {
   final Transaction transaction;
-  const TransactionWidget({Key? key, required this.transaction})
+  final Function selectTransaction;
+  final Transaction? selectedTransaction;
+  const TransactionWidget(
+      {Key? key,
+      required this.transaction,
+      required this.selectTransaction,
+      required this.selectedTransaction})
       : super(key: key);
 
   @override
@@ -19,6 +25,13 @@ class _TransactionWidgetState extends State<TransactionWidget> {
   void _togglePrice() {
     setState(() {
       _showingPrice = !_showingPrice;
+    });
+  }
+
+  void _selectTransaction() {
+    setState(() {
+      widget.selectTransaction(widget.transaction);
+      _togglePrice();
     });
   }
 
@@ -92,7 +105,8 @@ class _TransactionWidgetState extends State<TransactionWidget> {
                       onPressed: _togglePrice,
                       child: Icon(Icons.cancel_rounded)),
                   TextButton(
-                      onPressed: () => {}, child: Icon(Icons.search_rounded)),
+                      onPressed: () => _selectTransaction(),
+                      child: Icon(Icons.search_rounded)),
                 ],
               ),
             ),

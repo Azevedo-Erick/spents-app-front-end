@@ -69,23 +69,35 @@ class _LoginPageState extends State<LoginPage>
             ),
           ),
           Center(
-            child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                width: MediaQuery.of(context).size.width * 0.6,
-                height: MediaQuery.of(context).size.height * 0.7,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                    ),
+                    child: _isLogin
+                        ? _LoginWidget(
+                            animationController: _animationController,
+                            toggleFormMode: _toggleFormMode,
+                          )
+                        : _RegisterWidget(
+                            animationController: _animationController,
+                            toggleFormMode: _toggleFormMode,
+                          )),
+                SizedBox(
+                  height: 5,
                 ),
-                child: _isLogin
-                    ? _LoginWidget(
-                        animationController: _animationController,
-                        toggleFormMode: _toggleFormMode,
-                      )
-                    : _RegisterWidget(
-                        animationController: _animationController,
-                        toggleFormMode: _toggleFormMode,
-                      )),
+                TextButton(
+                  onPressed: () {},
+                  child: Text('Forgot Password?'),
+                ),
+              ],
+            ),
           )
 
           // ),
@@ -230,13 +242,6 @@ class _LoginWidgetState extends State<_LoginWidget> {
             });
           },
           child: Text('Dont have an account?'),
-        ),
-        SizedBox(
-          height: 20,
-        ),
-        TextButton(
-          onPressed: () {},
-          child: Text('Forgot Password?'),
         ),
       ],
     );
