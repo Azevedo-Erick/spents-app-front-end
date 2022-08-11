@@ -167,130 +167,90 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
           ],
         ),
       ),
-      drawer: Drawer(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SafeArea(
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  child: Text(
-                    'Meus Gastos',
-                    style: Theme.of(context).textTheme.headline6,
-                  ),
-                ),
-              ),
-              TextButton(
-                onPressed: () {},
-                child: const ListTile(
-                  title: Text('Meu Perfil'),
-                  trailing: Icon(Icons.person),
-                ),
-              ),
-              TextButton(
-                child: const ListTile(
-                  title: Text('Sair'),
-                  trailing: Icon(Icons.exit_to_app),
-                ),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/login');
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         child: Column(
           children: [
-            BarChartWidget(),
+            // BarChartWidget(),
             const SizedBox(height: 20),
             Expanded(
-              child: Column(
-                children: [
-                  controller.categories.isNotEmpty
-                      ? Expanded(
-                          flex: 2,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.grey,
-                                width: 1.0,
-                              ),
-                              color: Colors.blueGrey.shade900,
-                            ),
-                            child: ListView.separated(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(
-                                width: 10,
-                              ),
-                              scrollDirection: Axis.horizontal,
-                              physics: const ScrollPhysics(
-                                parent: BouncingScrollPhysics(),
-                              ),
-                              itemBuilder: (BuildContext context, int index) {
-                                return TextButton(
-                                  onPressed: (() {
-                                    controller.filterTransactionsByCategory(
-                                        controller.categories[index]);
-                                    setState(() {
-                                      showingAll = !showingAll;
-                                    });
-                                  }),
-                                  child: CategoryWidget(
-                                    name: controller.categories[index].name,
-                                    color: controller.categories[index].color,
-                                  ),
-                                );
-                              },
-                              itemCount: controller.categories.length,
-                            ),
+                child: Column(children: [
+              controller.categories.isNotEmpty
+                  ? Expanded(
+                      flex: 2,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.grey,
+                            width: 1.0,
                           ),
-                        )
-                      : Container(
-                          child: Text("Nenhuma categoria cadastrada"),
+                          color: Colors.blueGrey.shade900,
                         ),
-                  const SizedBox(height: 20),
-                  Expanded(
-                    flex: 9,
-                    child: Ink(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      height: MediaQuery.of(context).size.height * 0.8,
-                      decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 0, 0, 0),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(5),
-                        ),
-                      ),
-                      child: ListView.separated(
-                        itemBuilder: (context, index) => TransactionWidget(
-                          transaction: showingAll
-                              ? controller.transactions[index]
-                              : controller.transactionsFiltered[index],
-                          selectTransaction: selectTransaction,
-                          selectedTransaction: _selectedTransaction,
-                        ),
-                        itemCount: showingAll
-                            ? controller.transactions.length
-                            : controller.transactionsFiltered.length,
-                        separatorBuilder: (context, index) => const Divider(
-                          height: 10,
+                        child: ListView.separated(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          separatorBuilder: (context, index) => const SizedBox(
+                            width: 10,
+                          ),
+                          scrollDirection: Axis.horizontal,
+                          physics: const ScrollPhysics(
+                            parent: BouncingScrollPhysics(),
+                          ),
+                          itemBuilder: (BuildContext context, int index) {
+                            return TextButton(
+                              onPressed: (() {
+                                controller.filterTransactionsByCategory(
+                                    controller.categories[index]);
+                                setState(() {
+                                  showingAll = !showingAll;
+                                });
+                              }),
+                              child: CategoryWidget(
+                                name: controller.categories[index].name,
+                                color: controller.categories[index].color,
+                              ),
+                            );
+                          },
+                          itemCount: controller.categories.length,
                         ),
                       ),
+                    )
+                  : Container(
+                      child: Text("Nenhuma categoria cadastrada"),
+                    ),
+              const SizedBox(height: 20),
+              Expanded(
+                flex: 9,
+                child: Ink(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(5),
                     ),
                   ),
-                ],
+                  child: ListView.separated(
+                    itemBuilder: (context, index) => TransactionWidget(
+                      transaction: showingAll
+                          ? controller.transactions[index]
+                          : controller.transactionsFiltered[index],
+                      selectTransaction: selectTransaction,
+                      selectedTransaction: _selectedTransaction,
+                    ),
+                    itemCount: showingAll
+                        ? controller.transactions.length
+                        : controller.transactionsFiltered.length,
+                    separatorBuilder: (context, index) => const Divider(
+                      height: 10,
+                    ),
+                  ),
+                ),
               ),
-            ),
+            ]))
           ],
         ),
       ),

@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:spents_app/models/category_model.dart';
 import 'package:spents_app/models/transaction_model.dart';
 import 'package:spents_app/repositories/category_repository.dart';
-import 'package:spents_app/repositories/transaction_repository.dart';
 
+import 'package:spents_app/repositories/transaction_repository.dart';
 import '../models/transaction_model.dart';
 import '../models/week_expenses_model.dart';
 
@@ -29,7 +29,7 @@ class TransactionOverviewController extends ChangeNotifier {
   UnmodifiableListView<Category> get categories {
     if (_categories.isEmpty) {
       CategoryRepository repo = CategoryRepository();
-      repo.getAllCategories().then((value) {
+      repo.getMany().then((value) {
         _categories = value;
         notifyListeners();
       });
@@ -40,7 +40,7 @@ class TransactionOverviewController extends ChangeNotifier {
   UnmodifiableListView<Transaction> get transactions {
     if (_transactions.isEmpty) {
       TransactionRepository repo = TransactionRepository();
-      repo.getAllTransactions().then((value) {
+      repo.getMany().then((value) {
         _transactions = value;
         notifyListeners();
       });
@@ -61,9 +61,8 @@ class TransactionOverviewController extends ChangeNotifier {
   }
 
   void addTransaction(Transaction transaction) {
-    String body = jsonEncode(transaction.toJson());
     TransactionRepository repo = TransactionRepository();
-    repo.createTransaction(body).then((value) {
+    repo.create(transaction).then((value) {
       _transactions.add(transaction);
       notifyListeners();
     });
@@ -72,9 +71,10 @@ class TransactionOverviewController extends ChangeNotifier {
   void getOneWeekTransactions(DateTime date) {
     String dateString = date.toString().substring(0, 10);
     TransactionRepository repo = TransactionRepository();
-    repo.getOneWeekTransactions(dateString).then((value) {
+    repo.getOneWeek(date, date.add(Duration(days: 7))).then((value) {
+      //TODO: Fazer todo o filtro de movimentações por dia da semana
       _weekExpenses = value;
-      //sort list by weekDay correctly (Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday)
+
       _weekExpenses.sort((a, b) {
         if (a.weekDay == 'Monday') {
           return -1;

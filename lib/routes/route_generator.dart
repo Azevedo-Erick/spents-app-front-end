@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:spents_app/screens/transactions_overview.dart';
-
-import '../screens/login_page.dart';
 import '../screens/new_data.dart';
 
 class RouteGenerator {
@@ -9,12 +7,10 @@ class RouteGenerator {
     final args = settings.arguments;
 
     switch (settings.name) {
-      case '/transactions-overview':
+      case '/':
         return MaterialPageRoute(builder: (_) => const TransactionsOverview());
       case '/new-data':
         return MaterialPageRoute(builder: (_) => const NewData());
-      case '/login':
-        return MaterialPageRoute(builder: (_) => const LoginPage());
     }
     return _errorRoute();
   }

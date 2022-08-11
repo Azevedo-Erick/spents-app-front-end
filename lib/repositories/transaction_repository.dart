@@ -1,57 +1,93 @@
-import 'dart:collection';
-import 'dart:convert';
+import 'package:spents_app/models/category_model.dart';
+import 'package:spents_app/models/type_enum.dart';
+import 'package:sqflite/sqflite.dart' as sqlite;
 
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:spents_app/models/week_expenses_model.dart';
+import '../../database/db.dart';
+import '../../models/transaction_model.dart';
+import 'category_repository.dart';
 
-import '../models/transaction_model.dart';
-
-class TransactionRepository extends ChangeNotifier {
-  TransactionRepository();
-
-  //List<Transaction> _transactions = [];
-
-  //UnmodifiableListView<Transaction> get transactions =>
-  //  UnmodifiableListView(_transactions);
-
-  Future<List<Transaction>> getAllTransactions() async {
+class TransactionRepository {
+  late DB _database;
+  TransactionRepository() {
+    _database = DB.instance;
+  }
+  Future<List<Transaction>> getMany() async {
     List<Transaction> transactions = [];
-    http.Response response =
-        await http.get(Uri.parse('http://localhost:3000/transaction'));
-    var results = jsonDecode(response.body);
-    if (results != null) {
-      for (int i = 0; i < results.length; i++) {
-        transactions.add(Transaction.fromJson(results[i]));
-      }
+
+    final sqlite.Database db = await _database.database;
+
+    final List<Map<String, dynamic>> maps = await db.query('transactions');
+    for (int i = 0; i < maps.length; i++) {
+      Category category =
+          await CategoryRepository().getById(maps[i]['category_id']);
+
+      transactions.add(Transaction(
+        id: maps[i]['id'].toString(),
+        title: maps[i]['title'],
+        date: DateTime.parse(maps[i]['date']),
+        description: maps[i]['description'],
+        type: Type.values[maps[i]['type']],
+        value: 0,
+        category: category,
+      ));
     }
-    return transactions;
-  }
 
-  Future<List<WeekExpenses>> getOneWeekTransactions(String date) async {
-    List<WeekExpenses> transactions = [];
-    http.Response response = await http
-        .get(Uri.parse('http://localhost:3000/transaction/after/$date'));
-    var results = jsonDecode(response.body);
-
-    if (results != null) {
-      for (int i = 0; i < results.length; i++) {
-        transactions.add(WeekExpenses.fromJson(results[i]));
-      }
-    }
-    return transactions;
-  }
-
-  Future<void> createTransaction(String body) async {
-    http.Response response = await http.post(
-      Uri.parse('http://localhost:3000/transaction'),
-      body: body,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    Category cat = Category(id: '0', name: '', color: '');
+    CategoryRepository().getById(1).then((value) => cat = value);
+    create(
+      Transaction(
+          id: '1',
+          title: 'Test',
+          value: 0,
+          category: cat,
+          date: DateTime.parse('2020-01-01'),
+          description: '',
+          type: Type.SPENT),
     );
-    if (response.statusCode == 201) {
-      getAllTransactions();
+
+    return transactions;
+  }
+
+  Future<void> create(Transaction transaction) async {
+    final sqlite.Database db = await _database.database;
+    await db.insert('transactions', transaction.toJson(),
+        conflictAlgorithm: sqlite.ConflictAlgorithm.replace);
+  }
+
+  Future<void> delete(Transaction transaction) async {
+    final sqlite.Database db = await _database.database;
+    await db
+        .delete('transactions', where: 'id = ?', whereArgs: [transaction.id]);
+  }
+
+  Future<void> update(Transaction transaction) async {
+    final sqlite.Database db = await _database.database;
+    await db.update('transactions', transaction.toJson(),
+        where: 'id = ?', whereArgs: [transaction.id]);
+  }
+
+  Future<List<Transaction>> getOneWeek(
+      DateTime startDate, DateTime finalDate) async {
+    final sqlite.Database db = await _database.database;
+    final List<Map<String, dynamic>> maps = await db.query('transactions',
+        where: 'date BETWEEN ? AND ?', whereArgs: [startDate, finalDate]);
+
+    List<Transaction> transactions = [];
+    if (maps.isEmpty) {
+      return transactions;
     }
+    Category cat = Category(id: '0', name: '', color: '');
+    for (int i = 0; i < maps.length; i++) {
+      transactions.add(Transaction(
+        id: maps[i]['id'].toString(),
+        title: maps[i]['title'],
+        date: DateTime.parse(maps[i]['date']),
+        description: maps[i]['description'],
+        type: Type.values[maps[i]['type']],
+        value: 0,
+        category: cat,
+      ));
+    }
+    return transactions;
   }
 }

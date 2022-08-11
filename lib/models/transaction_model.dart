@@ -22,13 +22,13 @@ class Transaction {
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
-      id: json['id'],
+      id: json['id'].toString(),
       title: json['title'],
       date: DateTime.parse(json['date']),
       value: double.parse(json['value'].toString()),
       description: json['description'],
       type: Type.getType(json['type']),
-      category: Category.fromJson(json['Category']),
+      category: Category.fromJson(json['category']),
     );
   }
 
@@ -39,9 +39,8 @@ class Transaction {
       'date': date.toIso8601String(),
       'value': value,
       'description': description,
-      'type': type.toString(),
-      'categoryId': category.id,
-      'personId': 'cl5l8uu3o0002k6uprzzpr5u4'
+      'type': type?.id.toString(),
+      'category_id': category.id,
     };
   }
 }

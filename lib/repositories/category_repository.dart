@@ -1,40 +1,49 @@
-import 'dart:convert';
+import 'package:spents_app/database/db.dart';
+import 'package:sqflite/sqflite.dart';
 
-import '../models/category_model.dart';
-import 'package:http/http.dart' as http;
+import '../../models/category_model.dart';
 
 class CategoryRepository {
-  Future<List<Category>> getAllCategories() async {
+  late DB _database;
+
+  CategoryRepository() {
+    _database = DB.instance;
+  }
+
+  Future<List<Category>> getMany() async {
     List<Category> categories = [];
-    http.Response response =
-        await http.get(Uri.parse('http://localhost:3000/category'));
-    var results = jsonDecode(response.body);
-    if (results != null) {
-      for (int i = 0; i < results.length; i++) {
-        categories.add(Category.fromJson(results[i]));
-      }
+    final Database db = await _database.database;
+    final List<Map<String, dynamic>> maps = await db.query('categories');
+    for (int i = 0; i < maps.length; i++) {
+      categories.add(Category.fromJson(maps[i]));
     }
     return categories;
   }
 
-  Future<void> createCategory(String body) async {
-    http.Response response = await http.post(
-      Uri.parse('http://localhost:3000/category'),
-      body: body,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    );
-    if (response.statusCode == 201) {
-      getAllCategories();
-    }
+  Future<void> create(Category category) async {
+    final Database db = await _database.database;
+    await db.insert('categories', category.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  // Future<Category> getCategoryById(int id) => categoryDao.getCategoryById(id);
-  // Future<void> insertCategory(Category category) =>
-  //     categoryDao.insertCategory(category);
-  // Future<void> updateCategory(Category category) =>
-  //     categoryDao.updateCategory(category);
-  // Future<void> deleteCategory(Category category) =>
-  //     categoryDao.deleteCategory(category);
+  Future<void> delete(Category category) async {
+    final Database db = await _database.database;
+    await db.delete('categories', where: 'id = ?', whereArgs: [category.id]);
+  }
+
+  Future<void> update(Category category) async {
+    final Database db = await _database.database;
+    await db.update('categories', category.toJson(),
+        where: 'id = ?', whereArgs: [category.id]);
+  }
+
+  Future<Category> getById(int id) async {
+    final Database db = await _database.database;
+    final List<Map<String, dynamic>> maps =
+        await db.query('categories', where: 'id = ?', whereArgs: [id]);
+    if (maps.isNotEmpty) {
+      return Category.fromJson(maps.first);
+    }
+    return Category(id: '0', name: '', color: '');
+  }
 }

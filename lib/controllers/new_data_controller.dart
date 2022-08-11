@@ -16,7 +16,7 @@ class NewDataController extends ChangeNotifier {
   UnmodifiableListView<Category> get categories {
     if (_categories.isEmpty) {
       CategoryRepository repo = CategoryRepository();
-      repo.getAllCategories().then((value) {
+      repo.getMany().then((value) {
         _categories = value;
         notifyListeners();
       });
@@ -27,15 +27,14 @@ class NewDataController extends ChangeNotifier {
   void addTransaction(Transaction transaction) {
     String body = jsonEncode(transaction.toJson());
     TransactionRepository repo = TransactionRepository();
-    repo.createTransaction(body).then((value) {
+    repo.create(transaction).then((value) {
       notifyListeners();
     });
   }
 
   void addCategory(Category category) {
-    String body = jsonEncode(category.toJson());
     CategoryRepository repo = CategoryRepository();
-    repo.createCategory(body).then((value) {
+    repo.create(category).then((value) {
       _categories.clear();
       categories;
       notifyListeners();

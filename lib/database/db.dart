@@ -21,6 +21,8 @@ class DB {
   }
 
   _onCreate(db, version) async {
+    await db.execute('DROP TABLE IF EXISTS categories');
+    await db.execute('DROP TABLE IF EXISTS transactions');
     await db.execute(_transactions);
     await db.execute(_categories);
   }
