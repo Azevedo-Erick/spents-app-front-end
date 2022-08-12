@@ -171,7 +171,7 @@ class _TransactionsOverviewState extends State<TransactionsOverview> {
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         child: Column(
           children: [
-            // BarChartWidget(),
+            BarChartWidget(),
             const SizedBox(height: 20),
             Expanded(
                 child: Column(children: [

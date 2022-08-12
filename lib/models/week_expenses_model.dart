@@ -20,4 +20,7 @@ class WeekExpenses {
           .toList(),
     );
   }
+  void addTransaction(Transaction transaction) {
+    _transactions.add(transaction);
+  }
 }

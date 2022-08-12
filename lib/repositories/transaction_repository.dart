@@ -67,7 +67,7 @@ class TransactionRepository {
   }
 
   Future<List<Transaction>> getOneWeek(
-      DateTime startDate, DateTime finalDate) async {
+      String startDate, String finalDate) async {
     final sqlite.Database db = await _database.database;
     final List<Map<String, dynamic>> maps = await db.query('transactions',
         where: 'date BETWEEN ? AND ?', whereArgs: [startDate, finalDate]);

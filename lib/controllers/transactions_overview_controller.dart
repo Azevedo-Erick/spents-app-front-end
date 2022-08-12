@@ -1,7 +1,7 @@
 import 'dart:collection';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:spents_app/models/category_model.dart';
 import 'package:spents_app/models/transaction_model.dart';
 import 'package:spents_app/repositories/category_repository.dart';
@@ -69,12 +69,31 @@ class TransactionOverviewController extends ChangeNotifier {
   }
 
   void getOneWeekTransactions(DateTime date) {
-    String dateString = date.toString().substring(0, 10);
     TransactionRepository repo = TransactionRepository();
-    repo.getOneWeek(date, date.add(Duration(days: 7))).then((value) {
-      //TODO: Fazer todo o filtro de movimentações por dia da semana
-      _weekExpenses = value;
+    repo
+        .getOneWeek(
+            date.toString(), date.add(const Duration(days: 7)).toString())
+        .then((value) {
+      DateTime currentDate = DateTime.now();
 
+      //Gera a lista de transações por dia da semana
+      for (int i = 0; i < 7; i++) {
+        currentDate.add(Duration(days: i));
+        _weekExpenses.add(WeekExpenses(
+            DateFormat('EEEE').format(currentDate).toString(), []));
+      }
+
+      //Itera o resultado da query e adiciona as transações ao dia correto
+      for (int i = 0; i < value.length; i++) {
+        for (int j = 0; j < _weekExpenses.length; j++) {
+          if (DateFormat('EEEE').format(value[i].date).toString() ==
+              _weekExpenses[j].weekDay) {
+            _weekExpenses[j].addTransaction(value[i]);
+          }
+        }
+      }
+
+      //Organiza a lista de transações por dia da semana
       _weekExpenses.sort((a, b) {
         if (a.weekDay == 'Monday') {
           return -1;
